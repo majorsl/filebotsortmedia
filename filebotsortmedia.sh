@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.4.3 *REQUIREMENTS BELOW*
+# version 2.4.4 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -157,4 +157,4 @@ done
 # curl --data-binary '{ "jsonrpc": "2.0", "method": "VideoLibrary.Clean", "id": "mybash"}' -H 'content-type: application/json;' http://10.0.1.201:81/jsonrpc
 
 # display Notification Center update.
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
+/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns -timeout 10
