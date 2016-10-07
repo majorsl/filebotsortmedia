@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.4.5 *REQUIREMENTS BELOW*
+# version 2.4.6 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -63,8 +63,6 @@ VOLTRASH="/Volumes/Drobo/.Trashes/501/"
 
 # *****************************
 
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for media..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
-
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
 
@@ -73,6 +71,7 @@ do
 
 # 1st loop sets for TV shows.
 if [ "$xloop" -eq "0" ]; then
+	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for TV Shows..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
 	STARTDIR=$TVSHOWS
 	ENDDIR=$TVSHOWSSORT
 	FORMAT=$TVFORMAT
@@ -81,6 +80,7 @@ fi
 
 # 2nd loop sets for movies.
 if [ "$xloop" -eq "1" ]; then
+	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for Movies..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
 	STARTDIR=$MOVIES
 	ENDDIR=$MOVIESSORT
 	FORMAT=$MOVIEFORMAT
@@ -169,4 +169,4 @@ done
 # curl --data-binary '{ "jsonrpc": "2.0", "method": "VideoLibrary.Clean", "id": "mybash"}' -H 'content-type: application/json;' http://10.0.1.201:81/jsonrpc
 
 # display Notification Center update.
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns -timeout 10
+/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
