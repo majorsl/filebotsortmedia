@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.4.4 *REQUIREMENTS BELOW*
+# version 2.4.5 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -42,11 +42,20 @@ TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
 # path to your sorted TV Shows
 TVSHOWSSORT="/Volumes/Drobo/Media Center/TV Shows/"
 
+# format for your TV show Season/Episode prefex & what database to use.
+TVFORMAT="{n}/Season {s.pad(2)}/{S00E00} {t}"
+TVDB="thetvdb"
+#TVDB="TVmaze"
+
 # path to your unsorted Movies
 MOVIES="/Volumes/Drobo/Media Center/Unsorted-Movies/"
 
 # path to your sorted Movies
 MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
+
+# format for your Movies title/year & what database to use.
+MOVIEFORMAT="{n} ({y})"
+MOVIEDB="themoviedb"
 
 # path to your Volume's Trash ("501" is my UUID, yours may be different!) Find with:
 # dscl . -read /Users/YOURUSERNAME/ UniqueID
@@ -58,21 +67,24 @@ VOLTRASH="/Volumes/Drobo/.Trashes/501/"
 
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
-STARTDIR=$TVSHOWS
-ENDDIR=$TVSHOWSSORT
-FORMAT="{n}/Season {s.pad(2)}/{S00E00} {t}"
-DB="thetvdb"
-#DB="TVmaze"
 
 while [ $xloop -lt 2 ]
 do
+
+# 1st loop sets for TV shows.
+if [ "$xloop" -eq "0" ]; then
+	STARTDIR=$TVSHOWS
+	ENDDIR=$TVSHOWSSORT
+	FORMAT=$TVFORMAT
+	DB=$TVDB
+fi
 
 # 2nd loop sets for movies.
 if [ "$xloop" -eq "1" ]; then
 	STARTDIR=$MOVIES
 	ENDDIR=$MOVIESSORT
-	FORMAT="{n} ({y})"
-	DB="themoviedb"
+	FORMAT=$MOVIEFORMAT
+	DB=$MOVIEDB
 fi
 
 let xloop=$xloop+1
