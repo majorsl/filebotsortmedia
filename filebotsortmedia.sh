@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.5 *REQUIREMENTS BELOW*
+# version 2.5.1 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -84,11 +84,16 @@ while [ $xloop -lt 2 ]
 do
 
 # 1st loop sets for TV shows.
+
 if [ "$xloop" -eq "0" ]; then
+	IFS=$'\n'
+	COUNT=`ls -1 $TVSHOWS | wc -l`
+	unset IFS
+	ECHO $COUNT
 	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for TV Shows..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
 	STARTDIR=$TVSHOWS
 	ENDDIR=$TVSHOWSSORT
-	FORMAT="seriesFormat="$TVFORMAT
+	FORMAT=$TVFORMAT
 	DB=$TVDB
 	FNAMC="seriesFormat"
 fi
@@ -98,7 +103,7 @@ if [ "$xloop" -eq "1" ]; then
 	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for Movies..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
 	STARTDIR=$MOVIES
 	ENDDIR=$MOVIESSORT
-	FORMAT="seriesFormat"$MOVIEFORMAT
+	FORMAT=$MOVIEFORMAT
 	DB=$MOVIEDB
 	FNAMC="movieFormat"
 fi
@@ -157,9 +162,6 @@ find $STARTDIR -iname "Thumbs.db" -delete
 # delete files smaller than xMB since these are often un-named sample files.
 find $STARTDIR -type f -maxdepth 2 -size -15M -iname "*.mp4" -delete
 find $STARTDIR -type f -maxdepth 2 -size -9M -iname "*.mkv" -delete
-
-# path to Filebot binary
-#cd $FILEBOT"Contents/MacOS/"
 
 # rename and move.
 "$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
