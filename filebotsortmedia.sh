@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.4.6 *REQUIREMENTS BELOW*
+# version 2.5 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -20,8 +20,7 @@
 # 3. It cleans-up common "extra files" left behind, as well as any empty directories. You
 # still may have to clean up a few things now and then, but it is better than a full rm of
 # everything.
-# 4. The final lines (see end of script) will update your Kodi video library, and then
-# clean it. You can comment out the two lines if you don't want this done.
+# 4. Updates Emby when new media is added.
 # 5. Displays a Notification Center item when it has finished, you can comment this out in
 # the script if you do not want it to show.
 # 6. Set a Finder Label to Green for x265 files if file is properly tagged.
@@ -61,10 +60,25 @@ MOVIEDB="themoviedb"
 # dscl . -read /Users/YOURUSERNAME/ UniqueID
 VOLTRASH="/Volumes/Drobo/.Trashes/501/"
 
+# IP or Hostname to Emby & your api key generated within Emby. Set to 0 to not use.
+EMBYHOST="127.0.0.1"
+# path to a plain text file with your emby api key.
+EMBYAPI="/Volumes/Drobo/Media Center/embyapi.txt"
+#EMBY="0"
+
 # *****************************
 
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
+EMBYUPDATE=""
+
+# update Emby?
+if [ "$EMBY" != "0" ]; then
+    IFS=$'\n'
+	API=$(cat "$EMBYAPI")
+	unset IFS
+	EMBYUPDATE="$EMBYHOST:$API"
+fi
 
 while [ $xloop -lt 2 ]
 do
@@ -74,8 +88,9 @@ if [ "$xloop" -eq "0" ]; then
 	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for TV Shows..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
 	STARTDIR=$TVSHOWS
 	ENDDIR=$TVSHOWSSORT
-	FORMAT=$TVFORMAT
+	FORMAT="seriesFormat="$TVFORMAT
 	DB=$TVDB
+	FNAMC="seriesFormat"
 fi
 
 # 2nd loop sets for movies.
@@ -83,8 +98,9 @@ if [ "$xloop" -eq "1" ]; then
 	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for Movies..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
 	STARTDIR=$MOVIES
 	ENDDIR=$MOVIESSORT
-	FORMAT=$MOVIEFORMAT
+	FORMAT="seriesFormat"$MOVIEFORMAT
 	DB=$MOVIEDB
+	FNAMC="movieFormat"
 fi
 
 let xloop=$xloop+1
@@ -143,10 +159,10 @@ find $STARTDIR -type f -maxdepth 2 -size -15M -iname "*.mp4" -delete
 find $STARTDIR -type f -maxdepth 2 -size -9M -iname "*.mkv" -delete
 
 # path to Filebot binary
-cd $FILEBOT"Contents/MacOS/"
+#cd $FILEBOT"Contents/MacOS/"
 
 # rename and move.
-./filebot.sh -r -extract -rename $STARTDIR --format $ENDDIR"$FORMAT" --db $DB -non-strict
+"$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
 
 # cleanup remaining files.
 find $STARTDIR -iname "*.txt" -delete
@@ -160,13 +176,6 @@ unset IFS
 
 # done both TV Shows and Movies for this run.
 done
-
-# update Kodi library. Adjust the IP and Port for your Kodi installation. You can
-# duplicate the two curl statements for multiple Kodi installs.
-# /Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Updating Kodi media library..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
-
-# curl --data-binary '{ "jsonrpc": "2.0", "method": "VideoLibrary.Scan", "id": "mybash"}' -H 'content-type: application/json;' http://10.0.1.201:81/jsonrpc
-# curl --data-binary '{ "jsonrpc": "2.0", "method": "VideoLibrary.Clean", "id": "mybash"}' -H 'content-type: application/json;' http://10.0.1.201:81/jsonrpc
 
 # display Notification Center update.
 /Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
