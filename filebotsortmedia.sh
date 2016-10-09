@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.5.1 *REQUIREMENTS BELOW*
+# version 2.5.2 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -42,7 +42,7 @@ TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
 TVSHOWSSORT="/Volumes/Drobo/Media Center/TV Shows/"
 
 # format for your TV show Season/Episode prefex & what database to use.
-TVFORMAT="{n}/Season {s.pad(2)}/{S00E00} {t}"
+TVFORMAT="{n}/Season {s.pad(2)}/{S00E00} {t}" #default sorts: Series Name/Season #/S##E## Title
 TVDB="thetvdb"
 #TVDB="TVmaze"
 
@@ -53,7 +53,7 @@ MOVIES="/Volumes/Drobo/Media Center/Unsorted-Movies/"
 MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
 
 # format for your Movies title/year & what database to use.
-MOVIEFORMAT="{n} ({y})"
+MOVIEFORMAT="{n} ({y})" #default sorts: Movie Name (year)
 MOVIEDB="themoviedb"
 
 # path to your Volume's Trash ("501" is my UUID, yours may be different!) Find with:
@@ -64,7 +64,6 @@ VOLTRASH="/Volumes/Drobo/.Trashes/501/"
 EMBYHOST="127.0.0.1"
 # path to a plain text file with your emby api key.
 EMBYAPI="/Volumes/Drobo/Media Center/embyapi.txt"
-#EMBY="0"
 
 # *****************************
 
@@ -73,7 +72,7 @@ xloop=0
 EMBYUPDATE=""
 
 # update Emby?
-if [ "$EMBY" != "0" ]; then
+if [ "$EMBYHOST" != "0" ]; then
     IFS=$'\n'
 	API=$(cat "$EMBYAPI")
 	unset IFS
@@ -83,29 +82,41 @@ fi
 while [ $xloop -lt 2 ]
 do
 
-# 1st loop sets for TV shows.
+# 1st loop sets for TV shows. Count files in our unsorted directory, if 0 skip & check for movies.
 
 if [ "$xloop" -eq "0" ]; then
 	IFS=$'\n'
-	COUNT=`ls -1 $TVSHOWS | wc -l`
+	COUNT=`ls -1 $TVSHOWS | wc -l | tr -d ' '`
 	unset IFS
-	ECHO $COUNT
-	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for TV Shows..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
-	STARTDIR=$TVSHOWS
-	ENDDIR=$TVSHOWSSORT
-	FORMAT=$TVFORMAT
-	DB=$TVDB
-	FNAMC="seriesFormat"
+	if [ "$COUNT" -eq "0" ]; then
+		let xloop=$xloop+1
+	else
+		STARTDIR=$TVSHOWS
+		ENDDIR=$TVSHOWSSORT
+		FORMAT=$TVFORMAT
+		DB=$TVDB
+		FNAMC="seriesFormat"
+		NOTIFYCENT="TV Shows"
+		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
+	fi
 fi
 
-# 2nd loop sets for movies.
+# 2nd loop sets for movies. Count the files in our unsorted directory, if 0 this is the 2nd run. We can exit the script now.
 if [ "$xloop" -eq "1" ]; then
-	/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for Movies..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
-	STARTDIR=$MOVIES
-	ENDDIR=$MOVIESSORT
-	FORMAT=$MOVIEFORMAT
-	DB=$MOVIEDB
-	FNAMC="movieFormat"
+	IFS=$'\n'
+	COUNT=`ls -1 $MOVIES | wc -l | tr -d ' '`
+	unset IFS
+	if [ "$COUNT" -eq "0" ]; then
+		exit 0
+	else
+		STARTDIR=$MOVIES
+		ENDDIR=$MOVIESSORT
+		FORMAT=$MOVIEFORMAT
+		DB=$MOVIEDB
+		FNAMC="movieFormat"
+		NOTIFYCENT="Movies"
+		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
+	fi
 fi
 
 let xloop=$xloop+1
@@ -176,8 +187,8 @@ sleep 2
 find $STARTDIR -empty -type d -delete
 unset IFS
 
+# display Notification Center update.
+/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found $NOTIFYCENT media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
+
 # done both TV Shows and Movies for this run.
 done
-
-# display Notification Center update.
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
