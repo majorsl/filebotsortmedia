@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.5.2 *REQUIREMENTS BELOW*
+# version 2.5.3 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -128,48 +128,34 @@ DATETIME=`date +%m%d-%H%M%S`
 # lines when a space is found.
 IFS=$'\n'
 
-# looks for "sample" directories first.
+# clean up "sample" directories, but don't delete, just move to trash to be safe.
 for X in `find $STARTDIR -type d -iname "*sample*"`
 do
-        echo "Processing $X..."
-        mv $X $VOLTRASH/$DATETIME/
+    mv $X $VOLTRASH/$DATETIME/
 done
 
 sleep 1
 
-# looks for "sample" files.
+# clean up "sample" files, but don't delete, just move them to trash to be safe.
 for X in `find $STARTDIR -iname "*sample*"`
 do
-        echo "Processing $X..."
-        mv $X $VOLTRASH/$DATETIME/
+    mv $X $VOLTRASH/$DATETIME/
 done
 
 # sets finder label to Green for x265 items
 for X in `find $STARTDIR -iname "*x265*"`
 do
-        echo "Processing $X..."
-        /usr/local/bin/setlabel Green $X
+    /usr/local/bin/setlabel Green $X
 done
 
-# clean up files so they don't get moved to the show directories.
-find $STARTDIR -iname "*.nfo" -delete
-find $STARTDIR -iname ".DS_Store" -delete
-find $STARTDIR -iname "*.srt" -delete
-find $STARTDIR -iname "*.sfv" -delete
-find $STARTDIR -iname "*.jpg" -delete
-find $STARTDIR -iname "*.idx" -delete
-find $STARTDIR -iname "*.md5" -delete
-find $STARTDIR -iname "*.url" -delete
-find $STARTDIR -iname "*.mta" -delete
-find $STARTDIR -iname "*.txt" -delete
-find $STARTDIR -iname "*.png" -delete
-find $STARTDIR -iname "*.ico" -delete
-find $STARTDIR -iname "*.xml" -delete
-find $STARTDIR -iname "*.htm" -delete
-find $STARTDIR -iname "*.website" -delete
-find $STARTDIR -iname "*.torrent" -delete
-find $STARTDIR -iname "*.sqlite" -delete
-find $STARTDIR -iname "Thumbs.db" -delete
+# clean up these files so they don't get moved to the show directories.
+filearray=( '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' '*.mta' '*.txt' '*.png' '*.ico' '*.xml' '*.htm*' '*.web*' '*.torrent' '*.sql*' '*.Thumbs.db' )
+
+for delfile in "${filearray[@]}"
+do
+	find $STARTDIR -iname "$delfile" -delete
+done
+
 # delete files smaller than xMB since these are often un-named sample files.
 find $STARTDIR -type f -maxdepth 2 -size -15M -iname "*.mp4" -delete
 find $STARTDIR -type f -maxdepth 2 -size -9M -iname "*.mkv" -delete
@@ -177,7 +163,7 @@ find $STARTDIR -type f -maxdepth 2 -size -9M -iname "*.mkv" -delete
 # rename and move.
 "$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
 
-# cleanup remaining files.
+# cleanup any remaining files after the run, such as rar and expanded txt files.
 find $STARTDIR -iname "*.txt" -delete
 find $STARTDIR -iname "*.r*" -delete
 
