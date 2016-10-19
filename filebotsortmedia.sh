@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.5.4 *REQUIREMENTS BELOW*
+# version 2.5.5 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -142,14 +142,19 @@ do
     mv $X $VOLTRASH/$DATETIME/
 done
 
-# sets finder label to Green for x265 items
+# sets finder label to Green for x265 items, red for x264
 for X in `find $STARTDIR -iname "*x265*"`
 do
     /usr/local/bin/setlabel Green $X
 done
 
+for X in `find $STARTDIR -iname "*x264*"`
+do
+    /usr/local/bin/setlabel Red $X
+done
+
 # clean up these files so they don't get moved to the show directories.
-filearray=( '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' '*.mta' '*.txt' '*.png' '*.ico' '*.xml' '*.htm' '.html' '*.web' '*.website' '*.torrent' '*.sql' '*.sql-lite' '*.Thumbs.db' )
+filearray=( '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' '*.mta' '*.txt' '*.png' '*.ico' '*.xml' '*.htm' '.html' '*.web' '*.website' '*.torrent' '*.sql' '*.sql-lite' 'Thumbs.db' )
 
 for delfile in "${filearray[@]}"
 do
@@ -164,8 +169,12 @@ find $STARTDIR -type f -maxdepth 2 -size -9M -iname "*.mkv" -delete
 "$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
 
 # cleanup any remaining files after the run, such as rar and expanded txt files.
-find $STARTDIR -iname "*.txt" -delete
-find $STARTDIR -iname "*.r*" -delete
+filearray2=( '*.txt' '*.r*' )
+
+for delfile in "${filearray2[@]}"
+do
+	find $STARTDIR -iname "$delfile" -delete
+done
 
 sleep 2
 
