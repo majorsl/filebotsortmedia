@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.5.5 *REQUIREMENTS BELOW*
+# version 2.5.6 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -169,7 +169,7 @@ find $STARTDIR -type f -maxdepth 2 -size -9M -iname "*.mkv" -delete
 "$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
 
 # cleanup any remaining files after the run, such as rar and expanded txt files.
-filearray2=( '*.txt' '*.r*' )
+filearray2=( '*.txt' '*.r*' '*.part' )
 
 for delfile in "${filearray2[@]}"
 do
