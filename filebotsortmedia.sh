@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.5.7 *REQUIREMENTS BELOW*
+# version 2.5.8 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -154,7 +154,7 @@ do
 done
 
 # clean up these files so they don't get moved to the show directories.
-filearray=( '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' '*.mta' '*.txt' '*.png' '*.ico' '*.xml' '*.htm' '.html' '*.web' '*.website' '*.torrent' '*.sql' '*.sql-lite' 'Thumbs.db' )
+filearray=( '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' '*.mta' '*.txt' '*.png' '*.ico' '*.xml' '*.htm' '.html' '*.web' '*.lnk' '*.website' '*.torrent' '*.sql' '*.sql-lite' 'Thumbs.db' )
 
 for delfile in "${filearray[@]}"
 do
