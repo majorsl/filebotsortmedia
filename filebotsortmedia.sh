@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.5.8 *REQUIREMENTS BELOW*
+# version 2.5.9 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -163,7 +163,7 @@ done
 
 # delete files smaller than xMB since these are often un-named sample files.
 find $STARTDIR -type f -maxdepth 4 -size -15M -iname "*.mp4" -delete
-find $STARTDIR -type f -maxdepth 4 -size -9M -iname "*.mkv" -delete
+find $STARTDIR -type f -maxdepth 4 -size -11M -iname "*.mkv" -delete
 
 # rename and move.
 "$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
