@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.0 *REQUIREMENTS BELOW*
+# version 2.6.1 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -97,7 +97,7 @@ if [ "$xloop" -eq "0" ]; then
 		DB=$TVDB
 		FNAMC="seriesFormat"
 		NOTIFYCENT="TV Shows"
-		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
+		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
 	fi
 fi
 
@@ -115,7 +115,7 @@ if [ "$xloop" -eq "1" ]; then
 		DB=$MOVIEDB
 		FNAMC="movieFormat"
 		NOTIFYCENT="Movies"
-		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
+		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
 	fi
 fi
 
@@ -183,7 +183,7 @@ find $STARTDIR -empty -type d -delete
 unset IFS
 
 # display Notification Center update.
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found $NOTIFYCENT media has been organized." -appIcon "$FILEBOT"FileBot.app/Contents/Resources/filebot.icns
+/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found $NOTIFYCENT media has been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
 
 # done both TV Shows and Movies for this run.
 done
