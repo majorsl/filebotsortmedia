@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.1 *REQUIREMENTS BELOW*
+# version 2.6.2 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -60,8 +60,9 @@ MOVIEDB="themoviedb"
 # dscl . -read /Users/YOURUSERNAME/ UniqueID
 VOLTRASH="/Volumes/Drobo/.Trashes/501/"
 
-# IP or Hostname to Emby & your api key generated within Emby. Set to 0 to not use.
-EMBYHOST="127.0.0.1"
+# IP or Hostname to Emby & your api key generated within Emby. Set to 0 to not force
+# Emby to update.
+EMBYHOST="0"
 # path to a plain text file with your emby api key.
 EMBYAPI="/Volumes/Drobo/Media Center/embyapi.txt"
 
@@ -164,6 +165,7 @@ done
 # delete files smaller than xMB since these are often un-named sample files.
 find $STARTDIR -type f -maxdepth 4 -size -15M -iname "*.mp4" -delete
 find $STARTDIR -type f -maxdepth 4 -size -11M -iname "*.mkv" -delete
+find $STARTDIR -type f -maxdepth 4 -size -11M -iname "*.avi" -delete
 
 # rename and move.
 "$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
