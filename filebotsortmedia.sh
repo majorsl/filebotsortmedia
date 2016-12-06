@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.2 *REQUIREMENTS BELOW*
+# version 2.6.3 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -20,10 +20,9 @@
 # 3. It cleans-up common "extra files" left behind, as well as any empty directories. You
 # still may have to clean up a few things now and then, but it is better than a full rm of
 # everything.
-# 4. Updates Emby when new media is added.
-# 5. Displays a Notification Center item when it has finished, you can comment this out in
+# 4. Displays a Notification Center item when it has finished, you can comment this out in
 # the script if you do not want it to show.
-# 6. Set a Finder Label to Green for x265 files if file is properly tagged.
+# 5. Set a Finder Label to Green for x265 or Red for x264 files if file is properly tagged.
 # 
 # It shouldn't be a problem to have both your unsorted TV Shows and Movies in the same
 # directory, but you run the risk mis-matching names. If your torrent client has options
@@ -60,25 +59,10 @@ MOVIEDB="themoviedb"
 # dscl . -read /Users/YOURUSERNAME/ UniqueID
 VOLTRASH="/Volumes/Drobo/.Trashes/501/"
 
-# IP or Hostname to Emby & your api key generated within Emby. Set to 0 to not force
-# Emby to update.
-EMBYHOST="0"
-# path to a plain text file with your emby api key.
-EMBYAPI="/Volumes/Drobo/Media Center/embyapi.txt"
-
 # *****************************
 
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
-EMBYUPDATE=""
-
-# update Emby?
-if [ "$EMBYHOST" != "0" ]; then
-    IFS=$'\n'
-	API=$(cat "$EMBYAPI")
-	unset IFS
-	EMBYUPDATE="$EMBYHOST:$API"
-fi
 
 while [ $xloop -lt 2 ]
 do
@@ -163,12 +147,15 @@ do
 done
 
 # delete files smaller than xMB since these are often un-named sample files.
-find $STARTDIR -type f -maxdepth 4 -size -15M -iname "*.mp4" -delete
-find $STARTDIR -type f -maxdepth 4 -size -11M -iname "*.mkv" -delete
-find $STARTDIR -type f -maxdepth 4 -size -11M -iname "*.avi" -delete
+filearray3=( '*.mp4' '*.mkv' '*.avi' )
+
+for delfile in "${filearray3[@]}"
+do
+	find $STARTDIR -type f -maxdepth 4 -size -15M -iname "$delfile" -delete
+done
 
 # rename and move.
-"$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict --def emby=$EMBYUPDATE
+"$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict
 
 # cleanup any remaining files after the run, such as rar and expanded txt files.
 filearray2=( '*.txt' '*.r*' '*.part' )
