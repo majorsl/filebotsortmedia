@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.3 *REQUIREMENTS BELOW*
+# version 2.6.4 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -12,14 +12,12 @@
 # to /Applications/terminal-notifier.app
 #
 # This script will do several things in this order:
-# 1. it will look for any file/folder with "sample" in the name and move it to trash, pre-
-# pending the date/time to the file. While not likely an file will include a name AND
-# also have "sample" as an name, it's safer to put it in the trash than to out-right
-# rm it.
+# 1. It will clean-up extra files downloaded that are not needed, removing them first so
+# that they do not end up in your sorted directories.
 # 2. Next, it runs Filebot and sorts the file into the proper dir.
 # 3. It cleans-up common "extra files" left behind, as well as any empty directories. You
 # still may have to clean up a few things now and then, but it is better than a full rm of
-# everything.
+# everything. I add items I discover to successive versions.
 # 4. Displays a Notification Center item when it has finished, you can comment this out in
 # the script if you do not want it to show.
 # 5. Set a Finder Label to Green for x265 or Red for x264 files if file is properly tagged.
@@ -54,10 +52,6 @@ MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
 # format for your Movies title/year & what database to use.
 MOVIEFORMAT="{n} ({y})" #default sorts: Movie Name (year)
 MOVIEDB="themoviedb"
-
-# path to your Volume's Trash ("501" is my UUID, yours may be different!) Find with:
-# dscl . -read /Users/YOURUSERNAME/ UniqueID
-VOLTRASH="/Volumes/Drobo/.Trashes/501/"
 
 # *****************************
 
@@ -106,26 +100,9 @@ fi
 
 let xloop=$xloop+1
 
-# current date/time for file stamping.
-DATETIME=`date +%m%d-%H%M%S`
-
 # here we set BASHs internal IFS variable so directories/filenames are not broken into new
 # lines when a space is found.
 IFS=$'\n'
-
-# clean up "sample" directories, but don't delete, just move to trash to be safe.
-for X in `find $STARTDIR -type d -iname "*sample*"`
-do
-    mv $X $VOLTRASH/$DATETIME/
-done
-
-sleep 1
-
-# clean up "sample" files, but don't delete, just move them to trash to be safe.
-for X in `find $STARTDIR -iname "*sample*"`
-do
-    mv $X $VOLTRASH/$DATETIME/
-done
 
 # sets finder label to Green for x265 items, red for x264
 for X in `find $STARTDIR -iname "*x265*"`
