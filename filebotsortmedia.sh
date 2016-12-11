@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.4 *REQUIREMENTS BELOW*
+# version 2.6.5 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -145,7 +145,8 @@ done
 sleep 2
 
 # remove empty directories.
-find $STARTDIR -empty -type d -delete
+cd $STARTDIR
+find . -empty -type d -delete
 unset IFS
 
 # display Notification Center update.
