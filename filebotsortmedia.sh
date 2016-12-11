@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.5 *REQUIREMENTS BELOW*
+# version 2.6.6 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -65,7 +65,7 @@ do
 
 if [ "$xloop" -eq "0" ]; then
 	IFS=$'\n'
-	COUNT=`ls -1 $TVSHOWS | wc -l | tr -d ' '`
+	COUNT=$(ls -1 $TVSHOWS | wc -l | tr -d ' ')
 	unset IFS
 	if [ "$COUNT" -eq "0" ]; then
 		let xloop=$xloop+1
@@ -83,7 +83,7 @@ fi
 # 2nd loop sets for movies. Count the files in our unsorted directory, if 0 this is the 2nd run. We can exit the script now.
 if [ "$xloop" -eq "1" ]; then
 	IFS=$'\n'
-	COUNT=`ls -1 $MOVIES | wc -l | tr -d ' '`
+	COUNT=$(ls -1 $MOVIES | wc -l | tr -d ' ')
 	unset IFS
 	if [ "$COUNT" -eq "0" ]; then
 		exit 0
@@ -105,12 +105,12 @@ let xloop=$xloop+1
 IFS=$'\n'
 
 # sets finder label to Green for x265 items, red for x264
-for X in `find $STARTDIR -iname "*x265*"`
+for X in $(find $STARTDIR -iname "*x265*")
 do
     /usr/local/bin/setlabel Green $X
 done
 
-for X in `find $STARTDIR -iname "*x264*"`
+for X in $(find $STARTDIR -iname "*x264*")
 do
     /usr/local/bin/setlabel Red $X
 done
