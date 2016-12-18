@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.6 *REQUIREMENTS BELOW*
+# version 2.6.7 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -65,9 +65,9 @@ do
 
 if [ "$xloop" -eq "0" ]; then
 	IFS=$'\n'
-	COUNT=$(ls -1 $TVSHOWS | wc -l | tr -d ' ')
+	COUNTTV=$(ls -1 $TVSHOWS | wc -l | tr -d ' ')
 	unset IFS
-	if [ "$COUNT" -eq "0" ]; then
+	if [ "$COUNTTV" -eq "0" ]; then
 		let xloop=$xloop+1
 	else
 		STARTDIR=$TVSHOWS
@@ -76,16 +76,16 @@ if [ "$xloop" -eq "0" ]; then
 		DB=$TVDB
 		FNAMC="seriesFormat"
 		NOTIFYCENT="TV Shows"
-		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTTV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
 	fi
 fi
 
 # 2nd loop sets for movies. Count the files in our unsorted directory, if 0 this is the 2nd run. We can exit the script now.
 if [ "$xloop" -eq "1" ]; then
 	IFS=$'\n'
-	COUNT=$(ls -1 $MOVIES | wc -l | tr -d ' ')
+	COUNTMOV=$(ls -1 $MOVIES | wc -l | tr -d ' ')
 	unset IFS
-	if [ "$COUNT" -eq "0" ]; then
+	if [ "$COUNTMOV" -eq "0" ]; then
 		exit 0
 	else
 		STARTDIR=$MOVIES
@@ -94,7 +94,7 @@ if [ "$xloop" -eq "1" ]; then
 		DB=$MOVIEDB
 		FNAMC="movieFormat"
 		NOTIFYCENT="Movies"
-		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNT folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTMOV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
 	fi
 fi
 
@@ -149,8 +149,9 @@ cd $STARTDIR
 find . -empty -type d -delete
 unset IFS
 
-# display Notification Center update.
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, any found $NOTIFYCENT media has been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
-
 # done both TV Shows and Movies for this run.
 done
+
+# display Notification Center update.
+let COUNT=$COUNTTV+COUNTMOV
+/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, $COUNT media items have been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
