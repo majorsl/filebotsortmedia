@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.7 *REQUIREMENTS BELOW*
+# version 2.6.8 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -154,4 +154,10 @@ done
 
 # display Notification Center update.
 let COUNT=$COUNTTV+COUNTMOV
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, $COUNT media items have been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+HAVEHAS="items have"
+
+if [ "$xloop" -eq "1" ]; then
+	HAVEHAS="item has"
+fi
+
+/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, $COUNT media $HAVEHAS been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
