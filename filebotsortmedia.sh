@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.8 *REQUIREMENTS BELOW*
+# version 2.6.9 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -30,7 +30,7 @@
 # *** SET YOUR OPTIONS HERE ***
 # path to Filebot binary (usually /Applications/ for the app and possibly ~/Applications if using
 # homebrew cask. If in ~/Applications you can move it to /Applications if you like.)
-FILEBOT="/Applications/FileBot_4.7.2-brew.app/"
+FILEBOT="/Applications/FileBot.app/"
 
 # path to your unsorted TV Shows
 TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
@@ -141,6 +141,10 @@ for delfile in "${filearray2[@]}"
 do
 	find $STARTDIR -iname "$delfile" -delete
 done
+
+# featurettes clean up.
+
+find . -name "Featurettes" -type d -exec rm -r {} +
 
 sleep 2
 
