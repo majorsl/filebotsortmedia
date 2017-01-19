@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.6.9 *REQUIREMENTS BELOW*
+# version 2.7.0 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -142,15 +142,13 @@ do
 	find $STARTDIR -iname "$delfile" -delete
 done
 
-# featurettes clean up.
-
-find . -name "Featurettes" -type d -exec rm -r {} +
-
 sleep 2
 
 # remove empty directories.
 cd $STARTDIR
 find . -empty -type d -delete
+# featurettes clean up.
+find . -name "Featurettes" -type d -exec rm -r {} +
 unset IFS
 
 # done both TV Shows and Movies for this run.
