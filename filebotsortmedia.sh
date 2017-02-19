@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.7.0 *REQUIREMENTS BELOW*
+# version 2.7.1 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -135,7 +135,7 @@ done
 "$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict
 
 # cleanup any remaining files after the run, such as rar and expanded txt files.
-filearray2=( '*.txt' '*.r*' '*.part' )
+filearray2=( '*.txt' '*.r*' '*.part' '*.ass' )
 
 for delfile in "${filearray2[@]}"
 do
