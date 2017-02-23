@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.7.1 *REQUIREMENTS BELOW*
+# version 2.7.2 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -132,7 +132,7 @@ do
 done
 
 # rename and move.
-"$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" -r -extract -rename $STARTDIR --db $DB -non-strict
+"$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" --conflict auto -r -extract -rename $STARTDIR --db $DB -non-strict
 
 # cleanup any remaining files after the run, such as rar and expanded txt files.
 filearray2=( '*.txt' '*.r*' '*.part' '*.ass' )
