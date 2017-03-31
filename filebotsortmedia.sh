@@ -1,12 +1,12 @@
 #!/bin/sh
-# version 2.7.2 *REQUIREMENTS BELOW*
+# version 2.7.3 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
 # 3. Homebrew: brew install terminal-notifier
-# 4. Homebrew: brew cask install filebot
+# 4. Homebrew: brew cask install filebot --force --appdir=/Applications
 # 5. Homebrew: brew install osxutils
-# 6. Java SDK version 8 or greater.
+# 6. Java JRE or SDK version 8 or greater.
 #
 # Note: you may have to symlink /usr/local/Cellar/terminal-notifier/1.6.3/terminal-notifier.app
 # to /Applications/terminal-notifier.app
@@ -29,7 +29,8 @@
 
 # *** SET YOUR OPTIONS HERE ***
 # path to Filebot binary (usually /Applications/ for the app and possibly ~/Applications if using
-# homebrew cask. If in ~/Applications you can move it to /Applications if you like.)
+# homebrew cask. If in ~/Applications you can move it to /Applications if you like or link
+# directly to the install location eg: /usr/local/Caskroom/filebot/4.7.8/FileBot.app/ )
 FILEBOT="/Applications/FileBot.app/"
 
 # path to your unsorted TV Shows
