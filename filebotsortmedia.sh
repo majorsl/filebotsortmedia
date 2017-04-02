@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.7.3 *REQUIREMENTS BELOW*
+# version 2.7.4 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -27,11 +27,14 @@
 # for rules, you can set it so that your TV Show names are moved to a separate directory
 # for processing, leaving the default download location for movies.
 
-# *** SET YOUR OPTIONS HERE ***
-# path to Filebot binary (usually /Applications/ for the app and possibly ~/Applications if using
+# SET YOUR OPTIONS HERE -------------------------------------------------------------------------
+# path to Filebot binary, usually /Applications/ for the app and possibly ~/Applications if using
 # homebrew cask. If in ~/Applications you can move it to /Applications if you like or link
-# directly to the install location eg: /usr/local/Caskroom/filebot/4.7.8/FileBot.app/ )
-FILEBOT="/Applications/FileBot.app/"
+# directly to the install location eg: /usr/local/Caskroom/filebot/4.7.8/ )
+FILEBOT="/Applications/"
+
+# path to terminal-notifier.app which is usually /Applications/
+TERMINALNOTIFIER="/Applications/"
 
 # path to your unsorted TV Shows
 TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
@@ -39,7 +42,7 @@ TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
 # path to your sorted TV Shows
 TVSHOWSSORT="/Volumes/Drobo/Media Center/TV Shows/"
 
-# format for your TV show Season/Episode prefex & what database to use.
+# format for your TV show Season/Episode prefex & what database to use. Only use one database.
 TVFORMAT="{n}/Season {s.pad(2)}/{S00E00} {t}" #default sorts: Series Name/Season #/S##E## Title
 TVDB="thetvdb"
 #TVDB="TVmaze"
@@ -50,11 +53,10 @@ MOVIES="/Volumes/Drobo/Media Center/Unsorted-Movies/"
 # path to your sorted Movies
 MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
 
-# format for your Movies title/year & what database to use.
+# format for your Movies title/year & what database to use. Only use one database.
 MOVIEFORMAT="{n} ({y})" #default sorts: Movie Name (year)
 MOVIEDB="themoviedb"
-
-# *****************************
+# -----------------------------------------------------------------------------------------------
 
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
@@ -63,7 +65,6 @@ while [ $xloop -lt 2 ]
 do
 
 # 1st loop sets for TV shows. Count files in our unsorted directory, if 0 skip & check for movies.
-
 if [ "$xloop" -eq "0" ]; then
 	IFS=$'\n'
 	COUNTTV=$(ls -1 $TVSHOWS | wc -l | tr -d ' ')
@@ -77,7 +78,7 @@ if [ "$xloop" -eq "0" ]; then
 		DB=$TVDB
 		FNAMC="seriesFormat"
 		NOTIFYCENT="TV Shows"
-		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTTV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+		"$TERMINALNOTIFIER"terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTTV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
 	fi
 fi
 
@@ -95,14 +96,13 @@ if [ "$xloop" -eq "1" ]; then
 		DB=$MOVIEDB
 		FNAMC="movieFormat"
 		NOTIFYCENT="Movies"
-		/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTMOV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+		"$TERMINALNOTIFIER"terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTMOV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
 	fi
 fi
 
 let xloop=$xloop+1
 
-# here we set BASHs internal IFS variable so directories/filenames are not broken into new
-# lines when a space is found.
+# here we set BASHs internal IFS variable so directories/filenames are not broken into new lines when a space is found.
 IFS=$'\n'
 
 # sets finder label to Green for x265 items, red for x264
@@ -133,9 +133,9 @@ do
 done
 
 # rename and move.
-"$FILEBOT"Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" --conflict auto -r -extract -rename $STARTDIR --db $DB -non-strict
+"$FILEBOT"Filebot.app/Contents/MacOS/./filebot.sh -script fn:amc --def $FNAMC=$ENDDIR"$FORMAT" --conflict auto -r -extract -rename $STARTDIR --db $DB -non-strict
 
-# cleanup any remaining files after the run, such as rar and expanded txt files.
+# cleanup any remaining files after the run, such as txt and expanded rar files.
 filearray2=( '*.txt' '*.r*' '*.part' '*.ass' )
 
 for delfile in "${filearray2[@]}"
@@ -163,4 +163,4 @@ if [ "$xloop" -eq "1" ]; then
 	HAVEHAS="item has"
 fi
 
-/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, $COUNT media $HAVEHAS been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+"$TERMINALNOTIFIER"terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, $COUNT media $HAVEHAS been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
