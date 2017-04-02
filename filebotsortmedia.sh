@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.7.4 *REQUIREMENTS BELOW*
+# version 2.7.5 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -20,7 +20,8 @@
 # everything. I add items I discover to successive versions.
 # 4. Displays a Notification Center item when it has finished, you can comment this out in
 # the script if you do not want it to show.
-# 5. Set a Finder Label to Green for x265 or Red for x264 files if file is properly tagged.
+# 5. Set a Finder Label to Green for x265, Red for x264, or Blue to files if file is properly
+# tagged.
 # 
 # It shouldn't be a problem to have both your unsorted TV Shows and Movies in the same
 # directory, but you run the risk mis-matching names. If your torrent client has options
@@ -114,6 +115,11 @@ done
 for X in $(find $STARTDIR -iname "*x264*")
 do
     /usr/local/bin/setlabel Red $X
+done
+
+for X in $(find $STARTDIR -iname "*xvid*")
+do
+    /usr/local/bin/setlabel Blue $X
 done
 
 # clean up these files so they don't get moved to the show directories.
