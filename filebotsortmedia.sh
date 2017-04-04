@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.7.5 *REQUIREMENTS BELOW*
+# version 2.7.6 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -106,17 +106,19 @@ let xloop=$xloop+1
 # here we set BASHs internal IFS variable so directories/filenames are not broken into new lines when a space is found.
 IFS=$'\n'
 
-# sets finder label to Green for x265 items, red for x264
+# sets finder label to Green for x265 items, red for x264, blue for XviD.
+for X in $(find $STARTDIR -iname "*hevc*")
+do
+    /usr/local/bin/setlabel Green $X
+done
 for X in $(find $STARTDIR -iname "*x265*")
 do
     /usr/local/bin/setlabel Green $X
 done
-
 for X in $(find $STARTDIR -iname "*x264*")
 do
     /usr/local/bin/setlabel Red $X
 done
-
 for X in $(find $STARTDIR -iname "*xvid*")
 do
     /usr/local/bin/setlabel Blue $X
