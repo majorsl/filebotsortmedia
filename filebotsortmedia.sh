@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.7.7 *REQUIREMENTS BELOW*
+# version 2.8 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -18,10 +18,9 @@
 # 3. It cleans-up common "extra files" left behind, as well as any empty directories. You
 # still may have to clean up a few things now and then, but it is better than a full rm of
 # everything. I add items I discover to successive versions.
-# 4. Displays a Notification Center item when it has finished, you can comment this out in
-# the script if you do not want it to show.
-# 5. Set a Finder Label to Green for x265, Red for x264, or Blue to files if file is properly
-# tagged.
+# 4. Displays a Notification Center item when it has finished.
+# 5. Set a Finder Label to Green for x265, Red for x264, or Blue for xvid to files if file is
+# properly tagged.
 # 
 # It shouldn't be a problem to have both your unsorted TV Shows and Movies in the same
 # directory, but you run the risk mis-matching names. If your torrent client has options
@@ -34,8 +33,8 @@
 # directly to the install location eg: /usr/local/Caskroom/filebot/4.7.8/ )
 FILEBOT="/Applications/"
 
-# path to terminal-notifier.app which is usually /Applications/
-TERMINALNOTIFIER="/Applications/"
+# path to terminal-notifier
+TERMINALNOTIFIER="/user/local/bin/"
 
 # path to your unsorted TV Shows
 TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
@@ -79,7 +78,7 @@ if [ "$xloop" -eq "0" ]; then
 		DB=$TVDB
 		FNAMC="seriesFormat"
 		NOTIFYCENT="TV Shows"
-		"$TERMINALNOTIFIER"terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTTV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+		"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTTV folder(s)/file(s)..." -sender net.filebot.FileBot.Command -activate -timeout 10
 	fi
 fi
 
@@ -97,7 +96,7 @@ if [ "$xloop" -eq "1" ]; then
 		DB=$MOVIEDB
 		FNAMC="movieFormat"
 		NOTIFYCENT="Movies"
-		"$TERMINALNOTIFIER"terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTMOV folder(s)/file(s)..." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+		"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTMOV folder(s)/file(s)..." -sender net.filebot.FileBot.Command -activate -timeout 10
 	fi
 fi
 
@@ -171,4 +170,4 @@ if [ "$xloop" -eq "1" ]; then
 	HAVEHAS="item has"
 fi
 
-"$TERMINALNOTIFIER"terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'FileBot' -message "Completed, $COUNT media $HAVEHAS been organized." -appIcon "$FILEBOT"Contents/Resources/filebot.icns
+"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "Completed, $COUNT media $HAVEHAS been organized." -sender net.filebot.FileBot.Command -activate -timeout 10
