@@ -19,8 +19,8 @@
 # still may have to clean up a few things now and then, but it is better than a full rm of
 # everything. I add items I discover to successive versions.
 # 4. Displays a Notification Center item when it has finished.
-# 5. Set a Finder Label to Green for x265, Red for x264, or Blue for xvid to files if file is
-# properly tagged.
+# 5. Set a Finder Label to Green for x265, Red for x264, or Blue for xvid to files if the
+# downloaded file is properly tagged.
 # 
 # It shouldn't be a problem to have both your unsorted TV Shows and Movies in the same
 # directory, but you run the risk mis-matching names. If your torrent client has options
