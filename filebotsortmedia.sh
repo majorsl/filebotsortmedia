@@ -1,5 +1,5 @@
 #!/bin/sh
-# version 2.8 *REQUIREMENTS BELOW*
+# version 2.8.1 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
@@ -34,7 +34,7 @@
 FILEBOT="/Applications/"
 
 # path to terminal-notifier
-TERMINALNOTIFIER="/user/local/bin/"
+TERMINALNOTIFIER="/usr/local/bin/"
 
 # path to your unsorted TV Shows
 TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
