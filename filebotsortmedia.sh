@@ -1,16 +1,19 @@
-#!/bin/sh
-# version 2.8.2 *REQUIREMENTS BELOW*
+#!/usr/bin/env bash
+# version 2.8.3 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
 # 3. Homebrew: brew install terminal-notifier
 # 4. Homebrew: brew cask install filebot --force --appdir=/Applications
-# 5. Homebrew: brew install osxutils
+# 5. Homebrew: brew install tag
 # 6. Homebrew: brew install detox
 # 7. Java JRE or SDK version 8 or greater.
 #
 # Note: you may have to symlink /usr/local/Cellar/terminal-notifier/1.6.3/terminal-notifier.app
 # to /Applications/terminal-notifier.app
+#
+# Most app path options below can be left as is since they are the default install locations for
+# homebrew. Modify only if you installed in a custom location or didn't use homebrew.
 #
 # This script will do several things in this order:
 # 1. It will clean-up extra files downloaded that are not needed, removing them first so
@@ -20,7 +23,7 @@
 # still may have to clean up a few things now and then, but it is better than a full rm of
 # everything. I add items I discover to successive versions.
 # 4. Displays a Notification Center item when it has finished.
-# 5. Set a Finder Label to Green for x265, Red for x264, or Blue for xvid to files if the
+# 5. Set a Finder Label to Green for x265, Red for x264, or Orange for xvid to files if the
 # downloaded file is properly tagged.
 # 
 # It shouldn't be a problem to have both your unsorted TV Shows and Movies in the same
@@ -58,13 +61,22 @@ MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
 MOVIEFORMAT="{n} ({y})" #default sorts: Movie Name (year)
 MOVIEDB="themoviedb"
 
-# pre-script path. Execute a script before filebotsortmedia. Leave as "" if none.
+# path to detox
+DETOX="/usr/local/opt/detox/bin/"
+
+#path to tag
+TAG="/usr/local/bin/"
+
+# pre-script path. Execute a script before filebotsortmedia & wait for it to complete. Leave as "" if none.
 PRESCRIPT="/Users/majorsl/Scripts/GitHub/convertac3/convertac3.sh"
 
 # -----------------------------------------------------------------------------------------------
 
 # Execute pre-script.
-$PRESCRIPT
+if [ "$PRESCRIPT" != "" ]; then
+	/bin/bash "$PRESCRIPT"
+	wait
+fi
 
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
@@ -114,24 +126,24 @@ let xloop=$xloop+1
 IFS=$'\n'
 
 # use detox to get rid of non-standard ascii characters and extra spaces to help out FileBot.
-detox -r $STARTDIR
+"$DETOX"detox -r $STARTDIR
 
 # sets finder label to Green for x265 items, red for x264, blue for XviD.
 for X in $(find $STARTDIR -iname "*hevc*")
 do
-    /usr/local/bin/setlabel Green $X
+    "$TAG"tag -a Green $X
 done
 for X in $(find $STARTDIR -iname "*x265*")
 do
-    /usr/local/bin/setlabel Green $X
+    "$TAG"tag -a Green $X
 done
 for X in $(find $STARTDIR -iname "*x264*")
 do
-    /usr/local/bin/setlabel Red $X
+    "$TAG"tag -a Red $X
 done
 for X in $(find $STARTDIR -iname "*xvid*")
 do
-    /usr/local/bin/setlabel Blue $X
+    "$TAG"tag -a Orange $X
 done
 
 # clean up these files so they don't get moved to the show directories.
