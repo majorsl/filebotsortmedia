@@ -1,12 +1,13 @@
 #!/bin/sh
-# version 2.8.1 *REQUIREMENTS BELOW*
+# version 2.8.2 *REQUIREMENTS BELOW*
 #
 # 1. Working Homebrew installed.
 # 2. Homebrew: brew tap caskroom/cask
 # 3. Homebrew: brew install terminal-notifier
 # 4. Homebrew: brew cask install filebot --force --appdir=/Applications
 # 5. Homebrew: brew install osxutils
-# 6. Java JRE or SDK version 8 or greater.
+# 6. Homebrew: brew install detox
+# 7. Java JRE or SDK version 8 or greater.
 #
 # Note: you may have to symlink /usr/local/Cellar/terminal-notifier/1.6.3/terminal-notifier.app
 # to /Applications/terminal-notifier.app
@@ -56,7 +57,14 @@ MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
 # format for your Movies title/year & what database to use. Only use one database.
 MOVIEFORMAT="{n} ({y})" #default sorts: Movie Name (year)
 MOVIEDB="themoviedb"
+
+# pre-script path. Execute a script before filebotsortmedia. Leave as "" if none.
+PRESCRIPT="/Users/majorsl/Scripts/GitHub/convertac3/convertac3.sh"
+
 # -----------------------------------------------------------------------------------------------
+
+# Execute pre-script.
+$PRESCRIPT
 
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
@@ -104,6 +112,9 @@ let xloop=$xloop+1
 
 # here we set BASHs internal IFS variable so directories/filenames are not broken into new lines when a space is found.
 IFS=$'\n'
+
+# use detox to get rid of non-standard ascii characters and extra spaces to help out FileBot.
+detox -r $STARTDIR
 
 # sets finder label to Green for x265 items, red for x264, blue for XviD.
 for X in $(find $STARTDIR -iname "*hevc*")
