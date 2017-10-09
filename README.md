@@ -1,4 +1,4 @@
-*Requirements*
+*Requirements:*
 
 1. Working Homebrew installed.
 2. Homebrew: brew tap caskroom/cask
@@ -6,7 +6,8 @@
 4. Homebrew: brew cask install filebot --force --appdir=/Applications
 5. Homebrew: brew install tag
 6. Homebrew: brew install detox
-7. Java JRE or SDK version 8 or greater.
+7. Homebrew: brew install ffmpeg
+8. Java JRE or SDK version 8 or greater.
 
 Note: you may have to symlink /usr/local/Cellar/terminal-notifier/1.6.3/terminal-notifier.app
 to /Applications/terminal-notifier.app
@@ -23,8 +24,8 @@ that they do not end up in your sorted directories.
 still may have to clean up a few things now and then, but it is better than a full rm of
 everything. I add items I discover to successive versions.
 5. Displays a Notification Center item when it has finished.
-6. Set a Finder Label to Green for x265, Red for x264, or Orange for xvid to files if the
-downloaded file is properly tagged.
+6. Set a Finder Label to Green x265, Red x264, Yellow x262, Orange mpeg4, Purple all others/
+legacy formats eg. xvid, wmv, etc.
 
 It shouldn't be a problem to have both your unsorted TV Shows and Movies in the same
 directory, but you run the risk mis-matching names. Best use is to have a separate location

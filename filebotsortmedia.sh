@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version 2.8.4 *See README.md for requirements and help*
+# version 2.8.5 *See README.md for requirements and help*
 #
 # Most app path options below can be left as is since they are the default install locations for
 # homebrew. Modify only if you installed in a custom location or didn't use homebrew.
@@ -43,6 +43,9 @@ DETOX="/usr/local/opt/detox/bin/"
 
 #path to tag
 TAG="/usr/local/bin/"
+
+# path to ffmpeg
+FFMPEG="/usr/local/opt/ffmpeg/bin/"
 
 # pre-script path. Execute a script before filebotsortmedia & wait for it to complete. Leave as "" if none.
 PRESCRIPT="/Users/majorsl/Scripts/GitHub/convertac3/convertac3.sh"
@@ -105,22 +108,21 @@ IFS=$'\n'
 # use detox to get rid of non-standard ascii characters and extra spaces to help out FileBot.
 "$DETOX"detox -r $STARTDIR
 
-# sets finder label to Green for x265 items, red for x264, blue for XviD.
-for X in $(find $STARTDIR -iname "*hevc*")
+# sets finder label: Green x265, Red x264, Yellow x262, Orange mpeg4, Purple all others/legacy formats eg. xvid, wmv, etc.
+for X in $(find "$STARTDIR" \( -name "*.mkv" -o -name "*.m4v" \))
 do
-    "$TAG"tag -a Green $X
-done
-for X in $(find $STARTDIR -iname "*x265*")
-do
-    "$TAG"tag -a Green $X
-done
-for X in $(find $STARTDIR -iname "*x264*")
-do
-    "$TAG"tag -a Red $X
-done
-for X in $(find $STARTDIR -iname "*xvid*")
-do
-    "$TAG"tag -a Orange $X
+VCODEC=$("$FFMPEG"ffprobe -v error -select_streams v -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 "$X")
+if [ "$VCODEC" = "hevc" ]; then
+	"$TAG"tag -a Green "$X"
+elif [ "$VCODEC" = "h264" ]; then
+	"$TAG"tag -a Red "$X"
+elif [ "$VCODEC" = "mpeg2video" ]; then
+	"$TAG"tag -a Yellow "$X"
+elif [ "$VCODEC" = "mpeg4" ]; then
+	"$TAG"tag -a Orange "$X"
+else
+	"$TAG"tag -a Purple "$X"
+fi
 done
 
 # clean up these files so they don't get moved to the show directories.
