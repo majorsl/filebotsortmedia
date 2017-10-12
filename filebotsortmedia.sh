@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version 2.8.5 *See README.md for requirements and help*
+# version 2.8.6 *See README.md for requirements and help*
 #
 # Most app path options below can be left as is since they are the default install locations for
 # homebrew. Modify only if you installed in a custom location or didn't use homebrew.
@@ -67,10 +67,10 @@ do
 # 1st loop sets for TV shows. Count files in our unsorted directory, if 0 skip & check for movies.
 if [ "$xloop" -eq "0" ]; then
 	IFS=$'\n'
-	COUNTTV=$(ls -1 $TVSHOWS | wc -l | tr -d ' ')
+	COUNTTV=$(ls -1 "$TVSHOWS" | wc -l | tr -d ' ')
 	unset IFS
 	if [ "$COUNTTV" -eq "0" ]; then
-		let xloop=$xloop+1
+		xloop=$((xloop+1))
 	else
 		STARTDIR=$TVSHOWS
 		ENDDIR=$TVSHOWSSORT
@@ -85,7 +85,7 @@ fi
 # 2nd loop sets for movies. Count the files in our unsorted directory, if 0 this is the 2nd run. We can exit the script now.
 if [ "$xloop" -eq "1" ]; then
 	IFS=$'\n'
-	COUNTMOV=$(ls -1 $MOVIES | wc -l | tr -d ' ')
+	COUNTMOV=$(ls -1 "$MOVIES" | wc -l | tr -d ' ')
 	unset IFS
 	if [ "$COUNTMOV" -eq "0" ]; then
 		exit 0
@@ -100,13 +100,13 @@ if [ "$xloop" -eq "1" ]; then
 	fi
 fi
 
-let xloop=$xloop+1
+xloop=$((xloop+1))
 
 # here we set BASHs internal IFS variable so directories/filenames are not broken into new lines when a space is found.
 IFS=$'\n'
 
 # use detox to get rid of non-standard ascii characters and extra spaces to help out FileBot.
-"$DETOX"detox -r $STARTDIR
+"$DETOX"detox -r "$STARTDIR"
 
 # sets finder label: Green x265, Red x264, Yellow x262, Orange mpeg4, Purple all others/legacy formats eg. xvid, wmv, etc.
 for X in $(find "$STARTDIR" \( -name "*.mkv" -o -name "*.m4v" \))
@@ -130,7 +130,7 @@ filearray=( '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' 
 
 for delfile in "${filearray[@]}"
 do
-	find $STARTDIR -iname "$delfile" -delete
+	find "$STARTDIR" -iname "$delfile" -delete
 done
 
 # delete files smaller than xMB since these are often un-named sample files.
@@ -138,7 +138,7 @@ filearray3=( '*.mp4' '*.mkv' '*.avi' )
 
 for delfile in "${filearray3[@]}"
 do
-	find $STARTDIR -type f -maxdepth 4 -size -15M -iname "$delfile" -delete
+	find "$STARTDIR" -type f -maxdepth 4 -size -15M -iname "$delfile" -delete
 done
 
 # rename and move.
@@ -149,23 +149,23 @@ filearray2=( '*.txt' '*.r*' '*.part' '*.ass' )
 
 for delfile in "${filearray2[@]}"
 do
-	find $STARTDIR -iname "$delfile" -delete
+	find "$STARTDIR" -iname "$delfile" -delete
 done
 
 sleep 2
 
 # remove empty directories.
-cd $STARTDIR
+cd "$STARTDIR" || exit
 find . -empty -type d -delete
 # featurettes clean up.
-find . -name "Featurettes" -type d -exec rm -r {} +
+find "$STARTDIR" -name "Featurettes" -type d -exec rm -r {} +
 unset IFS
 
 # done both TV Shows and Movies for this run.
 done
 
 # display Notification Center update.
-let COUNT=$COUNTTV+COUNTMOV
+COUNT=$((COUNTTV+COUNTMOV))
 HAVEHAS="items have"
 
 if [ "$xloop" -eq "1" ]; then
