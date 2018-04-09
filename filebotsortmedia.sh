@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version 2.8.6 *See README.md for requirements and help*
+# version 2.8.7 *See README.md for requirements and help*
 #
 # Most app path options below can be left as is since they are the default install locations for
 # homebrew. Modify only if you installed in a custom location or didn't use homebrew.
@@ -47,10 +47,35 @@ TAG="/usr/local/bin/"
 # path to ffmpeg
 FFMPEG="/usr/local/opt/ffmpeg/bin/"
 
-# pre-script path. Execute a script before filebotsortmedia & wait for it to complete. Leave as "" if none.
+# pre-script path. Execute a script before filebotsortmedia. Leave as "" if none.
 PRESCRIPT="/Users/majorsl/Scripts/GitHub/convertac3/convertac3.sh"
 
+# post-script path. Execute a script after filebotsortmedia. Leave as "" if none.
+POSTSCRIPT=""
+
 # -----------------------------------------------------------------------------------------------
+
+# Directory checks.
+if [ ! -d "$TVSHOWS" ]; then
+	"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "$TVSHOWS Not Found!" -sender net.filebot.FileBot.Command -activate -timeout 10
+	echo "$TVSHOWS Not Found!"
+	exit 1
+fi
+if [ ! -d "$TVSHOWSSORT" ]; then
+	"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "$TVSHOWSSORT Not Found!" -sender net.filebot.FileBot.Command -activate -timeout 10
+	echo "$TVSHOWSSORT Not Found!"
+	exit 1
+fi
+if [ ! -d "$MOVIES" ]; then
+	"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "$MOVIES Not Found!" -sender net.filebot.FileBot.Command -activate -timeout 10
+	echo "$MOVIES Not Found!"
+	exit 1
+fi
+if [ ! -d "$MOVIESSORT" ]; then
+	"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "$MOVIESSORT Not Found!" -sender net.filebot.FileBot.Command -activate -timeout 10
+	echo "$MOVIESSORT Not Found!"
+	exit 1
+fi
 
 # Execute pre-script.
 if [ "$PRESCRIPT" != "" ]; then
@@ -170,6 +195,12 @@ HAVEHAS="items have"
 
 if [ "$xloop" -eq "1" ]; then
 	HAVEHAS="item has"
+fi
+
+# Execute post-script.
+if [ "$POSTSCRIPT" != "" ]; then
+	/bin/bash "$POSTSCRIPT"
+	wait
 fi
 
 "$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "Completed, $COUNT media $HAVEHAS been organized." -sender net.filebot.FileBot.Command -activate -timeout 10
