@@ -24,7 +24,7 @@ TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
 TVSHOWSSORT="/Volumes/Drobo/Media Center/TV Shows/"
 
 # format for your TV show Season/Episode prefex & what database to use. Only use one database.
-TVFORMAT="{n}/Season {s.pad(2)}/{S00E00} {t}" #default sorts: Series Name/Season #/S##E## Title
+TVFORMAT="{n}/Season {s}/{S00E00} {t} [{vf}]" #default sorts: Series Name/Season #/S##E## Title Quality
 TVDB="thetvdb"
 #TVDB="TVmaze"
 
