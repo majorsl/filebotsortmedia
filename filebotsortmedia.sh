@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version 2.8.8 *See README.md for requirements and help*
+# version 2.8.9 *See README.md for requirements and help*
 #
 # Most app path options below can be left as is since they are the default install locations for
 # homebrew. Modify only if you installed in a custom location or didn't use homebrew.
@@ -24,7 +24,7 @@ TVSHOWS="/Volumes/Drobo/Media Center/Unsorted-TV Shows/"
 TVSHOWSSORT="/Volumes/Drobo/Media Center/TV Shows/"
 
 # format for your TV show Season/Episode prefex & what database to use. Only use one database.
-TVFORMAT="{n}/Season {s}/{S00E00} {t} [{source}][{vf}]" #default sorts: Series Name/Season #/S##E## Title Quality
+TVFORMAT="{n}/Season {s}/{S00E00} {t} [{source}][{vf}]" #default sorts: Series Name/Season #/S##E## Title [Source][Quality]
 TVDB="thetvdb"
 #TVDB="TVmaze"
 
@@ -35,7 +35,7 @@ MOVIES="/Volumes/Drobo/Media Center/Unsorted-Movies/"
 MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
 
 # format for your Movies title/year & what database to use. Only use one database.
-MOVIEFORMAT="{n} ({y})" #default sorts: Movie Name (year)
+MOVIEFORMAT="{n} ({y})/{n} ({y}) [{source}][{vf}]" #default sorts: Movie Name (year) [Source][Quality]
 MOVIEDB="themoviedb"
 
 # path to detox
