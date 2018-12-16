@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version 2.8.9 *See README.md for requirements and help*
+# version 2.9 *See README.md for requirements and help*
 #
 # Most app path options below can be left as is since they are the default install locations for
 # homebrew. Modify only if you installed in a custom location or didn't use homebrew.
@@ -33,6 +33,12 @@ MOVIES="/Volumes/Drobo/Media Center/Unsorted-Movies/"
 
 # path to your sorted Movies
 MOVIESSORT="/Volumes/Drobo/Media Center/Movies/"
+
+# path to your unsorted 4K Movies
+MOVIES4K="/Volumes/Drobo/Media Center/Unsorted-Movies 4K/"
+
+# path to your sorted 4K Movies
+MOVIESSORT4K="/Volumes/Drobo/Media Center/Movies 4K/"
 
 # format for your Movies title/year & what database to use. Only use one database.
 MOVIEFORMAT="{n} ({y})/{n} ({y}) [{source}][{vf}]" #default sorts: Movie Name (year) [Source][Quality]
@@ -76,6 +82,16 @@ if [ ! -d "$MOVIESSORT" ]; then
 	echo "$MOVIESSORT Not Found!"
 	exit 1
 fi
+if [ ! -d "$MOVIES4K" ]; then
+	"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "$MOVIES4K Not Found!" -sender net.filebot.FileBot.Command -activate -timeout 10
+	echo "$MOVIES Not Found!"
+	exit 1
+fi
+if [ ! -d "$MOVIESSORT4K" ]; then
+	"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "$MOVIESSORT4K Not Found!" -sender net.filebot.FileBot.Command -activate -timeout 10
+	echo "$MOVIESSORT Not Found!"
+	exit 1
+fi
 
 # Execute pre-script.
 if [ "$PRESCRIPT" != "" ]; then
@@ -86,7 +102,7 @@ fi
 # start loop 0 for TV Shows then 1 for Movies.
 xloop=0
 
-while [ $xloop -lt 2 ]
+while [ $xloop -lt 3 ]
 do
 
 # 1st loop sets for TV shows. Count files in our unsorted directory, if 0 skip & check for movies.
@@ -107,16 +123,34 @@ if [ "$xloop" -eq "0" ]; then
 	fi
 fi
 
-# 2nd loop sets for movies. Count the files in our unsorted directory, if 0 this is the 2nd run. We can exit the script now.
+# 2nd loop sets for movies. Count the files in our unsorted directory, if 0 skip & check for 4K movies.
 if [ "$xloop" -eq "1" ]; then
 	IFS=$'\n'
 	COUNTMOV=$(ls -1 "$MOVIES" | wc -l | tr -d ' ')
 	unset IFS
 	if [ "$COUNTMOV" -eq "0" ]; then
-		exit 0
+		xloop=$((xloop+1))
 	else
 		STARTDIR=$MOVIES
 		ENDDIR=$MOVIESSORT
+		FORMAT=$MOVIEFORMAT
+		DB=$MOVIEDB
+		FNAMC="movieFormat"
+		NOTIFYCENT="Movies"
+		"$TERMINALNOTIFIER"terminal-notifier -title 'FileBot' -message "Running filebotsortmedia script, searching for $NOTIFYCENT in $COUNTMOV folder(s)/file(s)..." -sender net.filebot.FileBot.Command -activate -timeout 10
+	fi
+fi
+
+# 3rd loop sets for 4K movies. Count the files in our unsorted directory, if 0 this is the 3rd run. We can exit the script now.
+if [ "$xloop" -eq "2" ]; then
+	IFS=$'\n'
+	COUNTMOV=$(ls -1 "$MOVIES4K" | wc -l | tr -d ' ')
+	unset IFS
+	if [ "$COUNTMOV" -eq "0" ]; then
+		exit 0
+	else
+		STARTDIR=$MOVIES4K
+		ENDDIR=$MOVIESSORT4K
 		FORMAT=$MOVIEFORMAT
 		DB=$MOVIEDB
 		FNAMC="movieFormat"
