@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version 2.9 *See README.md for requirements and help*
+# version 2.9.1 *See README.md for requirements and help*
 #
 # Most app path options below can be left as is since they are the default install locations for
 # homebrew. Modify only if you installed in a custom location or didn't use homebrew.
@@ -185,7 +185,7 @@ fi
 done
 
 # clean up these files so they don't get moved to the show directories.
-filearray=( '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' '*.mta' '*.txt' '*.png' '*.ico' '*.xml' '*.htm' '.html' '*.web' '*.lnk' '*.website' '*.torrent' '*.sql' '*.sql-lite' '*.sqlite' 'Thumbs.db' '*.json' )
+filearray=( '*.exe' '*.nfo' '.DS_Store' '*.srt' '*.sfv' '*.jpg' '*.idx' '*.md5' '*.url' '*.mta' '*.txt' '*.png' '*.ico' '*.xml' '*.htm' '.html' '*.web' '*.lnk' '*.website' '*.torrent' '*.sql' '*.sql-lite' '*.sqlite' 'Thumbs.db' '*.json' )
 
 for delfile in "${filearray[@]}"
 do
